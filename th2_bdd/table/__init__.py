@@ -11,7 +11,10 @@ class Table(Generic[T]):
         self._rows = []
 
     def parse(self, table):
-        rows = [[r.rstrip(" ").lstrip(" ") for r in row[1:-1].split("|")] for row in table.split("\n")]
+        rows = [
+            [r.rstrip(" ").lstrip(" ") for r in row[1:-1].split("|")]
+            for row in table.split("\n")
+        ]
         header = rows.pop(0)
         if [f.name for f in dataclasses.fields(self.row_type)] != header:
             raise ValueError(f"Invalid table header {header}")
@@ -27,7 +30,6 @@ class Table(Generic[T]):
 
     def __call__(self, tbl):
         return self.parse(tbl)
-
 
     def to_table(self):
         result = [dataclasses.asdict(row) for row in self.rows]

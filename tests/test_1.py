@@ -11,15 +11,9 @@ from tests.data import (
     ds,
     statuses,
 )
-from th2_bdd.util import (
-    check_heartbeats,
-    sf,
-    get_security_status,
-    send_event,
-    get_filter4rule,
-    get_pmr,
-)
-from th2_bdd.util.common import get_nos_fields, get_check, get_no_message_check
+from util import check_heartbeats, get_security_status, get_filter4rule, send_event, get_pmr, get_nos_fields, get_check, \
+    get_no_message_check
+from th2_bdd.util import sf
 from th2_bdd.table import Table
 
 
@@ -120,7 +114,6 @@ def received_message_check(
             conn_by_trader[username],
             checkpoint,
             ctx["__STEP__"],
-            [],
             message_type,
             get_filter4rule(row),
         ),
@@ -136,6 +129,5 @@ def no_messages_check(factory, ctx, username, checkpoint):
             conn_by_trader[username],
             checkpoint,
             ctx["__STEP__"],
-            {**ctx["nos_fields"]},
         ),
     )
