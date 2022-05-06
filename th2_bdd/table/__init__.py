@@ -34,18 +34,3 @@ class Table(Generic[T]):
     def to_table(self):
         result = [dataclasses.asdict(row) for row in self.rows]
         return {"type": "table", "rows": result}
-
-
-def table(row_type):
-    def decorator(function):
-        def wrapper(*args, **kwargs):
-            tbl = kwargs.get("table", None)
-            if tbl:
-                tbl: row_type = Table(row_type=row_type).parse(tbl)
-                kwargs["table"] = tbl
-            result = function(*args, **kwargs)
-            return result
-
-        return wrapper
-
-    return decorator
