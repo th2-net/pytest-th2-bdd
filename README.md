@@ -1,4 +1,4 @@
-# Th2 BDD test example
+# Th2 pytest plugin
 
 ## Requirements
 * Prepared th2 test environment with this schema

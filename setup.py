@@ -14,9 +14,9 @@ def get_version():
 
 
 setup(
-    name="th2-bdd",
+    name="pytest-th2-bdd",
     packages=list(map(lambda x: f"th2_bdd.{x}", find_packages(where="./th2_bdd"))),
-    entry_points={"pytest11": ["th2_bdd = th2_bdd.pytest"]},
+    entry_points={"pytest11": ["pytest_th2_bdd = th2_bdd.pytest"]},
     classifiers=["Framework :: Pytest"],
     author='TH2-devs',
     author_email='th2-devs@exactprosystems.com',
