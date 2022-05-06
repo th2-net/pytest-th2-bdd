@@ -45,12 +45,12 @@ def check_heartbeats(src, stream, delta, username):
     return False, messages
 
 
-def get_security_status(act, parent, security_id, alias):
+def get_security_status(act, ctx, security_id, alias):
     resp = act.placeSecurityStatusRequest(
         PlaceMessageRequest(
             description=f'Security check for "{security_id}"',
             connection_id=ConnectionID(session_alias=alias),
-            parent_event_id=parent,
+            parent_event_id=ctx["__STEP__"],
             message=sf.create_message_object(
                 msg_type="SecurityStatusRequest",
                 fields={
@@ -138,7 +138,7 @@ def get_nos_fields(base=None, **kwargs):
             "ClOrdID": sf.generate_client_order_id(7),
             "SecondaryClOrdID": sf.generate_client_order_id(7),
             "Side": "1",
-            "TransactTime": (datetime.now().isoformat()),
+            "TransactTime": (datetime.datetime.now().isoformat()),
             "TradingParty": [
                 {"PartyID": "DEMO-CONN1", "PartyIDSource": "D", "PartyRole": "76"},
                 {"PartyID": "0", "PartyIDSource": "P", "PartyRole": "3"},
@@ -152,14 +152,14 @@ def get_nos_fields(base=None, **kwargs):
     return fields
 
 
-def get_check(trader, conn, checkpoint_, parent, msg_type, filter_fields):
+def get_check(trader, conn, checkpoint_, ctx, msg_type, filter_fields):
     return CheckSequenceRuleRequest(
         description=f'Trader "{trader}" {msg_type}',
         chain_id=sf.create_chain_id(),
         connectivity_id=ConnectionID(session_alias=conn),
         checkpoint=checkpoint_.checkpoint_id,
         timeout=10000,
-        parent_event_id=parent,
+        parent_event_id=ctx["__STEP__"],
         pre_filter=PreFilter(
             fields={
                 "header": ValueFilter(
@@ -184,14 +184,14 @@ def get_check(trader, conn, checkpoint_, parent, msg_type, filter_fields):
     )
 
 
-def get_no_message_check(trader, conn, nos_resp, parent):
+def get_no_message_check(trader, conn, nos_resp, ctx):
     return NoMessageCheckRequest(
         description=f'Trader "{trader}" receives no messages',
         chain_id=sf.create_chain_id(),
         connectivity_id=ConnectionID(session_alias=conn),
         checkpoint=nos_resp.checkpoint_id,
         timeout=10000,
-        parent_event_id=parent,
+        parent_event_id=ctx["__STEP__"],
         pre_filter=PreFilter(
             fields={
                 "header": ValueFilter(

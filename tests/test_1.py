@@ -11,8 +11,16 @@ from tests.data import (
     ds,
     statuses,
 )
-from util import check_heartbeats, get_security_status, get_filter4rule, send_event, get_pmr, get_nos_fields, get_check, \
-    get_no_message_check
+from util import (
+    check_heartbeats,
+    get_security_status,
+    get_filter4rule,
+    send_event,
+    get_pmr,
+    get_nos_fields,
+    get_check,
+    get_no_message_check,
+)
 from th2_bdd.util import sf
 from th2_bdd.table import Table
 
@@ -47,7 +55,7 @@ def logged_check(factory, ctx, table: Table[UserNameRow], gateway):
     conn = conns[gateway]
     conn_by_trader[uname] = conn
 
-    status, messages = check_heartbeats(ds, conn, 120, uname)
+    status, messages = check_heartbeats(ds, conn, 60, uname)
     messages_ids = [extract_message_id(m) for m in messages]
     send_event(
         f"Ensure that user {uname} is logged in",
@@ -64,11 +72,13 @@ def logged_check(factory, ctx, table: Table[UserNameRow], gateway):
     )
 
 
-@given(parsers.cfparse("{instrument} is {status} (SecurityTradingStatus = 2)"))
-def check_instrument_status(factory, ctx, instrument, status):
+@given(
+    parsers.cfparse("{instrument} is {status} (SecurityTradingStatus = {status_digit})")
+)
+def check_instrument_status(factory, ctx, instrument, status, status_digit):
     expected = statuses[status]
     actual = get_security_status(
-        factory["act"], ctx["__STEP__"], instrument, alias=conn_by_trader["DEMO-CONN1"]
+        factory["act"], ctx, instrument, alias=conn_by_trader["DEMO-CONN1"]
     )
     ctx["instrument"] = instrument
     assert expected == actual
@@ -113,7 +123,7 @@ def received_message_check(
             username,
             conn_by_trader[username],
             checkpoint,
-            ctx["__STEP__"],
+            ctx,
             message_type,
             get_filter4rule(row),
         ),
@@ -128,6 +138,6 @@ def no_messages_check(factory, ctx, username, checkpoint):
             username,
             conn_by_trader[username],
             checkpoint,
-            ctx["__STEP__"],
+            ctx,
         ),
     )

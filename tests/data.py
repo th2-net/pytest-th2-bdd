@@ -1,4 +1,5 @@
 import dataclasses
+import os
 
 
 @dataclasses.dataclass
@@ -27,7 +28,7 @@ class RejectRow:
     
 trader = "DEMO-CONN1"
 
-ds = "http://th2-qa:30000/th2-meta-env/backend"
+ds = os.getenv("TH2_DS_ENTRYPOINT")
 conns = {
     "fix": "demo-conn1",
     "drop copy": "demo-dc1",
