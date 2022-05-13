@@ -28,6 +28,7 @@ def create_root(factory, name):
 
 @pytest.fixture(autouse=True, scope="session")
 def ctx(request):
+    #
     try:
         ctx_obj = request.session.th2_ctx
     except AttributeError:

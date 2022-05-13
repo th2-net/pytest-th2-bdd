@@ -1,2 +1,6 @@
 pytest
 pytest-bdd
+th2-grpc-act-template
+th2-grpc-common
+th2-grpc-check1
+th2-common
