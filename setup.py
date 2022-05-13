@@ -1,3 +1,4 @@
+import json
 import os
 import codecs
 from setuptools import find_packages, setup
