@@ -22,6 +22,9 @@ def get_reqs():
     return requirements
 
 
+with open("README.md", "r") as file:
+    long_description = file.read()
+
 setup(
     name=package_name,
     packages=find_packages(where="."),
@@ -31,4 +34,9 @@ setup(
     author_email='th2-devs@exactprosystems.com',
     install_requires=get_reqs(),
     version=package_version,
+    description=package_name,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    license="Apache License 2.0",
+    python_requires=">=3.7",
 )
